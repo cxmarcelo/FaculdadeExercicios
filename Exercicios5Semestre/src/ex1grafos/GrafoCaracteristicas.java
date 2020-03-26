@@ -49,6 +49,18 @@ public class GrafoCaracteristicas {
 	}
 	
 	
+	public boolean diagonalZerada(int[][] matriz) {
+		boolean zerada = true;
+		for(int x = 0; x < matriz.length;x++) {
+			if(matriz[x][x] != 0) {
+				zerada = false;
+			}
+		}
+		return zerada;
+	}
+	
+	
+	
 	public void imprimirMatriz(int matriz[][]) {
 		
 		for (int linha = 0; linha < matriz.length; linha++) {
@@ -61,9 +73,10 @@ public class GrafoCaracteristicas {
 	
 	public static void main(String[] args) {
 		
+		/*
 		GrafoCaracteristicas teste = new GrafoCaracteristicas();
 		teste.imprimirMatriz(teste.lerTxt());
-		
+		*/
 		
 	}
 }
