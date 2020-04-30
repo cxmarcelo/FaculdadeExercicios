@@ -49,25 +49,6 @@ public class Exercicio1 {
 	}
 
 
-	public void isCiclico(int[][] matriz) {
-		ArrayList<int[]> arestas = arestas(matriz);
-		int[] inicial;
-
-
-		for (int i = 0; i < arestas.size() ; i++) {
-			inicial = arestas.get(i);
-			ArrayList<int[]> possiveis = new ArrayList<int[]>();
-			for (int j = 0; j < arestas.size(); j++) {
-				if(inicial[1] == arestas.get(j)[0]) {
-					possiveis.add(arestas.get(j));
-				}
-			}
-			for (int[] areP : possiveis) {
-			}
-		}
-	}
-
-
 	public ArrayList<ArrayList<Integer>> listaAdjacencia(int[][] matriz) {
 		ArrayList<ArrayList<Integer>> lista = new ArrayList<ArrayList<Integer>>();
 		for (int li = 0; li < matriz.length; li++) {
@@ -85,16 +66,6 @@ public class Exercicio1 {
 		return lista;
 	}
 
-	private ArrayList<int[]> andar(int[] arest, ArrayList<int[]> arestas) {
-		int[] volta = {arest[1], arest[0]};
-		ArrayList<int[]> possiblidades = new ArrayList<int[]>();
-		for (int i = 0; i < arestas.size(); i++) {
-			if(arest[1] == arestas.get(i)[0] && volta != arestas.get(i)) {
-				possiblidades.add(arestas.get(i));
-			}
-		}
-		return possiblidades;
-	}
 
 	public boolean isConexo(int[][] matriz) {
 		ArrayList<Integer> grauVert = grauVertice(matriz);
@@ -115,27 +86,49 @@ public class Exercicio1 {
 	}
 
 	
-	public void isConexo2(int[][] matriz) {
-		ArrayList<ArrayList<Integer>> listaAdj = new ArrayList<ArrayList<Integer>>();
-		boolean retorno = false;
+	//deu ruim
+	public boolean isCiclico3(int[][] matriz) {
+		ArrayList<int[]> arestas = arestas(matriz);
 		
-		
-		
-		for (ArrayList<Integer> linha : listaAdj) {
-			if(linha.size() > 2) {
-				int inicial = linha.get(0).intValue();
-				for (int i = 2; i <= linha.size(); i++) {
-					
-					if(linha.get(i).intValue() == inicial) {
-						retorno = true;
-					}
+		for (int i = 0; i < arestas.size(); i++) {
+			int[] inicial = arestas.get(i);
+			int vertInicial = arestas.get(i)[0];
+			ArrayList<int[]> aux = arestas(matriz);
+			aux.removeIf(n -> (n[0] == inicial[0] || n[0] == inicial[1] && n[1] == inicial[0]));
+			int verticeAtual = inicial[1];
 
-				}
+			if(busca(vertInicial, verticeAtual, aux)) {
+				return true;
 			}
-
-
 		}
+		return false;
 	}
+
+	
+	private boolean busca(int vertInicial, int vertAtual, ArrayList<int[]> lista) {
+		ArrayList<int[]> poss = possiblidades(vertAtual, lista);
+		for (int[] is : poss) {
+			if(is[1] == vertInicial) {
+				return true;
+			}else {
+				lista.removeIf(n -> (n[0] == is[0] && n[1] == is[1]));
+				return busca(vertInicial, is[1], lista);
+			}
+		}
+		return false;
+	}
+	
+	
+	private ArrayList<int[]> possiblidades(int atual, ArrayList<int[]> lista) {
+		ArrayList<int[]> listaAux = new ArrayList<int[]>();
+		for (int[] is : lista) {
+			if(is[0] == atual) {
+				listaAux.add(is);
+			}
+		}
+		return listaAux;
+	}
+	
 	
 
 	public static void main(String[] args) {
@@ -194,7 +187,7 @@ public class Exercicio1 {
 		System.out.println("1)f)");
 		System.out.println();
 
-		ArrayList<ArrayList<Integer>> lista = exe.listaAdjacencia(matriz1);
+		ArrayList<ArrayList<Integer>> lista = exe.listaAdjacencia(matriz2);
 
 		for (ArrayList<Integer> linha : lista) {
 			for (Integer li : linha) {
@@ -203,8 +196,12 @@ public class Exercicio1 {
 			System.out.print("-");
 			System.out.println("");
 		}
+		
 
-
-
+		System.out.println("\n--------------------------------");
+		System.out.println("1)E)");
+		System.out.println();
+		System.out.println(exe.isCiclico3(matriz2) ? "Ciclico" : "Aciclico");
+		
 	}
 }
